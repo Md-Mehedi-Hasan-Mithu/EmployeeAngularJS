@@ -46,18 +46,37 @@ app.controller('EmployeeFormController', function($scope,$http){
 
 app.controller('SalaryFormController',function($scope,$http){
     $scope.salary = {};
-    $scope.employees = {};
+    $scope.employees = [];
 
     $http.get('http://localhost:5000/api/employee')
     .then(function(response) {
       $scope.employees = response.data;
     });
 
-     $scope.save = function() {
+    $scope.save = function() {
     $http.post('http://localhost:5000/api/salary', $scope.salary)
       .then(function() {
         alert('Salary saved successfully!');
         $scope.salary = {};
       });
   };
+
+  // Employee List Controller
+app.controller('EmployeeListController', function($scope, $http) {
+  $scope.employees = [];
+  $scope.filter = {};
+
+  $scope.loadEmployees = function() {
+    $http.get('http://localhost:5000/api/employee/list')
+      .then(function(response) {
+        $scope.employees = response.data;
+      });
+  };
+
+  $scope.loadEmployees();
+
+  $scope.edit = function(emp) {
+    $scope.selectedEmployee = angular.copy(emp);
+  };
+});
 })
