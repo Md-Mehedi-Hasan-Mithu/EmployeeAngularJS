@@ -1,0 +1,61 @@
+<div class="container">
+  <h2>Employee List</h2>
+
+  <!-- Filter Section -->
+  <div class="form-row" style="margin-bottom:15px;">
+    <div class="form-group" style="flex:1">
+      <label>Name</label>
+      <input type="text" ng-model="filter.employeeName"
+             placeholder="Search by name..." />
+    </div>
+    <div class="form-group" style="flex:1">
+      <label>Designation</label>
+      <input type="text" ng-model="filter.designation"
+             placeholder="Search by designation..." />
+    </div>
+    <div class="form-group" style="flex:1">
+      <label>From Date</label>
+      <input type="date" ng-model="filter.fromDate" />
+    </div>
+    <div class="form-group" style="flex:1">
+      <label>To Date</label>
+      <input type="date" ng-model="filter.toDate" />
+    </div>
+    <div class="form-group" style="flex:1">
+      <label>Salary</label>
+      <input type="number" ng-model="filter.salary"
+             placeholder="Search by salary..." />
+    </div>
+  </div>
+
+  <!-- Employee Table -->
+  <table>
+    <thead>
+      <tr>
+        <th>Employee Name</th>
+        <th>Designation</th>
+        <th>Joining Date</th>
+        <th>Mobile Number</th>
+        <th>Salary</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="emp in employees | filter:filter">
+        <td>{{emp.employeeName}}</td>
+        <td>{{emp.designation}}</td>
+        <td>{{emp.joiningDate | date:'dd-MM-yyyy'}}</td>
+        <td>{{emp.mobileNumber}}</td>
+        <td>{{emp.salary}}</td>
+        <td>
+          <button class="btn-edit" ng-click="edit(emp)">Edit</button>
+        </td>
+      </tr>
+      <tr ng-if="employees.length === 0">
+        <td colspan="6" style="text-align:center; color:#999;">
+          No employees found
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
