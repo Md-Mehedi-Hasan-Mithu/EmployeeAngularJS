@@ -2,21 +2,73 @@
 <html ng-app="employeeApp">
 <head>
   <meta charset="UTF-8">
-  <title>Employee Management System</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular-route.min.js"></script>
+  <title>Employee Management</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Segoe UI,sans-serif;}
+    body{background:#f0f2f5;}
+    .navbar{background:#1565c0;color:white;padding:14px 28px;display:flex;align-items:center;gap:16px;}
+    .navbar h1{font-size:17px;font-weight:600;flex:1;}
+    .navbar a{color:white;text-decoration:none;font-size:13px;padding:7px 16px;border-radius:5px;border:1px solid rgba(255,255,255,0.4);}
+    .navbar a:hover{background:rgba(255,255,255,0.15);}
+    .container{max-width:980px;margin:28px auto;padding:0 16px;}
+    .card{background:white;border-radius:8px;border:1px solid #e0e0e0;padding:24px;margin-bottom:16px;}
+    .page-title{font-size:17px;font-weight:600;margin-bottom:20px;color:#1a1a1a;}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .fg{display:flex;flex-direction:column;gap:5px;}
+    .fg.full{grid-column:1/-1;}
+    .fg label{font-size:12px;color:#666;font-weight:500;}
+    .fg input,.fg select,.fg textarea{border:1px solid #d0d0d0;border-radius:5px;padding:8px 11px;font-size:14px;width:100%;font-family:inherit;}
+    .fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:#1565c0;box-shadow:0 0 0 2px rgba(21,101,192,0.1);}
+    .fg textarea{min-height:72px;resize:vertical;}
+    .fg input:disabled{background:#f5f5f5;color:#999;}
+    .btn{padding:9px 22px;border-radius:5px;cursor:pointer;font-size:13px;border:none;font-family:inherit;font-weight:500;}
+    .btn-primary{background:#1565c0;color:white;}
+    .btn-success{background:#2e7d32;color:white;}
+    .btn-danger{background:#c62828;color:white;}
+    .btn-warning{background:#e65100;color:white;}
+    .btn-secondary{background:#eeeeee;color:#333;}
+    .btn:hover{opacity:0.85;}
+    .alert-success{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;padding:10px 14px;border-radius:5px;margin-bottom:14px;font-size:13px;}
+    .alert-danger{background:#ffebee;color:#c62828;border:1px solid #ef9a9a;padding:10px 14px;border-radius:5px;margin-bottom:14px;font-size:13px;}
+    .filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+    .filter-row input,.filter-row select{flex:1;min-width:120px;border:1px solid #d0d0d0;border-radius:5px;padding:7px 10px;font-size:13px;}
+    table{width:100%;border-collapse:collapse;font-size:13px;}
+    th{background:#f8f9fa;padding:10px 12px;text-align:left;border-bottom:2px solid #e0e0e0;font-weight:600;color:#444;}
+    td{padding:10px 12px;border-bottom:1px solid #f0f0f0;color:#333;}
+    tr:hover td{background:#fafbff;}
+    .actions{display:flex;gap:6px;}
+    .ic-btn{padding:4px 12px;border-radius:4px;cursor:pointer;font-size:12px;font-family:inherit;font-weight:500;border:none;}
+    .ic-view{background:#e3f2fd;color:#1565c0;}
+    .ic-edit{background:#fff3e0;color:#e65100;}
+    .ic-del{background:#ffebee;color:#c62828;}
+    .ic-btn:hover{opacity:0.8;}
+    .empty{text-align:center;padding:40px;color:#aaa;font-size:14px;}
+    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;justify-content:center;align-items:center;}
+    .overlay.open{display:flex;}
+    .modal{background:white;border-radius:10px;padding:24px;width:92%;max-width:480px;max-height:90vh;overflow-y:auto;}
+    .modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
+    .modal-hdr span{font-size:15px;font-weight:600;}
+    .x-btn{background:none;border:none;font-size:22px;cursor:pointer;color:#999;line-height:1;}
+    .read-row{display:flex;padding:8px 0;border-bottom:1px solid #f5f5f5;font-size:13px;}
+    .read-label{color:#888;min-width:130px;font-weight:500;}
+    .read-val{color:#222;font-weight:500;}
+    .loading{text-align:center;padding:30px;color:#888;font-size:13px;}
+    .badge-count{background:#e3f2fd;color:#1565c0;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:600;margin-left:8px;}
+  </style>
   <script src="app.js"></script>
+  <script src="controllers/employeeController.js"></script>
+  <script src="controllers/listController.js"></script>
 </head>
 <body>
-  <!-- Navigation Menu -->
-  <nav>
-    <a href="#!/employee-form">Employee Form</a>
-    <a href="#!/salary-form">Salary Form</a>
-    <a href="#!/employee-list">Employee List</a>
-  </nav>
-
-  <!-- Pages load here -->
-  <div ng-view></div>
+  <div class="navbar">
+    <h1>Employee Management System</h1>
+    <a href="#!/add">+ Add Employee</a>
+    <a href="#!/list">View List</a>
+  </div>
+  <div class="container">
+    <div ng-view></div>
+  </div>
 </body>
 </html>

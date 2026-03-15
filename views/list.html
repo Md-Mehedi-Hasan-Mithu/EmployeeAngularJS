@@ -1,0 +1,109 @@
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+  <div class="page-title" style="margin:0">
+    Employee List
+    <span class="badge-count">{{ employees.length }}</span>
+  </div>
+  <a href="#!/add" class="btn btn-success" style="text-decoration:none;">+ Add Employee</a>
+</div>
+
+<div class="alert-success" ng-if="toastMsg && toastType=='success'">{{ toastMsg }}</div>
+<div class="alert-danger"  ng-if="toastMsg && toastType=='error'">{{ toastMsg }}</div>
+
+<div class="card" style="padding:16px;">
+
+  <div class="filter-row">
+    <input type="text"   ng-model="filters.name"        placeholder="Filter by name"        ng-change="load()">
+    <input type="text"   ng-model="filters.designation"  placeholder="Filter by designation" ng-change="load()">
+    <input type="date"   ng-model="filters.fromDate"     ng-change="load()" title="From joining date">
+    <input type="date"   ng-model="filters.toDate"       ng-change="load()" title="To joining date">
+    <input type="number" ng-model="filters.minSalary"    placeholder="Min salary"            ng-change="load()">
+    <button class="btn btn-secondary" ng-click="clearFilters()">Clear</button>
+  </div>
+
+  <div class="loading" ng-if="loading">Loading employees...</div>
+
+  <div ng-if="!loading">
+    <table ng-if="employees.length">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Designation</th>
+          <th>Joining Date</th>
+          <th>Mobile</th>
+          <th>Salary</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="emp in employees track by emp.employeeCode">
+          <td style="color:#aaa;">{{ $index + 1 }}</td>
+          <td><strong>{{ emp.employeeCode }}</strong></td>
+          <td>{{ emp.employeeName }}</td>
+          <td>{{ emp.designation || '—' }}</td>
+          <td>{{ emp.joiningDate ? (emp.joiningDate | date:'dd MMM yyyy') : '—' }}</td>
+          <td>{{ emp.mobileNumber || '—' }}</td>
+          <td>{{ emp.salary ? '৳' + (emp.salary | number:0) : '—' }}</td>
+          <td>
+            <div class="actions">
+              <button class="ic-btn ic-view" ng-click="openView(emp)">View</button>
+              <button class="ic-btn ic-edit" ng-click="goEdit(emp.employeeCode)">Edit</button>
+              <button class="ic-btn ic-del"  ng-click="openDelete(emp)">Delete</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="empty" ng-if="!employees.length">
+      No employees found. Add one using the button above.
+    </div>
+  </div>
+
+</div>
+
+<!-- VIEW MODAL -->
+<div class="overlay" ng-class="{open: viewModal}" ng-click="closeView()">
+  <div class="modal" ng-click="$event.stopPropagation()">
+    <div class="modal-hdr">
+      <span>Employee Details</span>
+      <button class="x-btn" ng-click="closeView()">×</button>
+    </div>
+    <div ng-if="selectedEmployee">
+      <div class="read-row"><span class="read-label">Employee Code</span><span class="read-val">{{ selectedEmployee.employeeCode }}</span></div>
+      <div class="read-row"><span class="read-label">Full Name</span><span class="read-val">{{ selectedEmployee.employeeName }}</span></div>
+      <div class="read-row"><span class="read-label">Designation</span><span class="read-val">{{ selectedEmployee.designation || '—' }}</span></div>
+      <div class="read-row"><span class="read-label">Date of Birth</span><span class="read-val">{{ (selectedEmployee.dateOfBirth | date:'dd MMM yyyy') || '—' }}</span></div>
+      <div class="read-row"><span class="read-label">Joining Date</span><span class="read-val">{{ (selectedEmployee.joiningDate | date:'dd MMM yyyy') || '—' }}</span></div>
+      <div class="read-row"><span class="read-label">Mobile</span><span class="read-val">{{ selectedEmployee.mobileNumber || '—' }}</span></div>
+      <div class="read-row"><span class="read-label">Salary</span><span class="read-val">{{ selectedEmployee.salary ? '৳' + (selectedEmployee.salary | number:0) : '—' }}</span></div>
+      <div class="read-row"><span class="read-label">Religion</span><span class="read-val">{{ selectedEmployee.religion || '—' }}</span></div>
+      <div class="read-row"><span class="read-label">Division</span><span class="read-val">{{ selectedEmployee.division || '—' }}</span></div>
+      <div class="read-row"><span class="read-label">District</span><span class="read-val">{{ selectedEmployee.district || '—' }}</span></div>
+      <div class="read-row"><span class="read-label">Address</span><span class="read-val">{{ selectedEmployee.address || '—' }}</span></div>
+    </div>
+    <div style="margin-top:16px;">
+      <button class="btn btn-secondary" ng-click="closeView()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="overlay" ng-class="{open: deleteModal}" ng-click="closeDelete()">
+  <div class="modal" style="max-width:380px;" ng-click="$event.stopPropagation()">
+    <div class="modal-hdr">
+      <span>Confirm Delete</span>
+      <button class="x-btn" ng-click="closeDelete()">×</button>
+    </div>
+    <p style="font-size:14px;line-height:1.7;margin-bottom:20px;color:#444;">
+      Are you sure you want to delete
+      <strong>{{ deleteTarget.employeeName }}</strong>
+      ({{ deleteTarget.employeeCode }})?
+      This cannot be undone.
+    </p>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-danger"    ng-click="confirmDelete()">Yes, Delete</button>
+      <button class="btn btn-secondary" ng-click="closeDelete()">Cancel</button>
+    </div>
+  </div>
+</div>

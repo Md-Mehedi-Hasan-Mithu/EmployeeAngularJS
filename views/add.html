@@ -1,0 +1,90 @@
+<div class="page-title">{{ isEdit ? 'Edit Employee' : 'Add New Employee' }}</div>
+
+<div class="alert-success" ng-if="message">{{ message }}</div>
+<div class="alert-danger"  ng-if="error">{{ error }}</div>
+
+<div class="card">
+  <form ng-submit="save()">
+    <div class="form-grid">
+
+      <div class="fg">
+        <label>Employee Code *</label>
+        <input type="text" ng-model="employee.employeeCode"
+               placeholder="e.g. EMP001" ng-disabled="isEdit">
+      </div>
+
+      <div class="fg">
+        <label>Employee Name *</label>
+        <input type="text" ng-model="employee.employeeName" placeholder="Full name">
+      </div>
+
+      <div class="fg">
+        <label>Date of Birth</label>
+        <input type="date" ng-model="employee.dateOfBirth">
+      </div>
+
+      <div class="fg">
+        <label>Joining Date</label>
+        <input type="date" ng-model="employee.joiningDate">
+      </div>
+
+      <div class="fg">
+        <label>Mobile Number</label>
+        <input type="text" ng-model="employee.mobileNumber" placeholder="01XXXXXXXXX">
+      </div>
+
+      <div class="fg">
+        <label>Religion</label>
+        <select ng-model="employee.religion">
+          <option value="">-- Select --</option>
+          <option ng-repeat="r in religions">{{ r }}</option>
+        </select>
+      </div>
+
+      <div class="fg">
+        <label>Division</label>
+        <select ng-model="employee.division" ng-change="onDivisionChange()">
+          <option value="">-- Select --</option>
+          <option ng-repeat="d in divisions">{{ d }}</option>
+        </select>
+      </div>
+
+      <div class="fg">
+        <label>District</label>
+        <select ng-model="employee.district" ng-disabled="!districts.length">
+          <option value="">-- Select Division First --</option>
+          <option ng-repeat="d in districts">{{ d }}</option>
+        </select>
+      </div>
+
+      <div class="fg">
+        <label>Designation</label>
+        <input type="text" ng-model="employee.designation" placeholder="e.g. Manager">
+      </div>
+
+      <div class="fg">
+        <label>Salary</label>
+        <input type="number" ng-model="employee.salary" placeholder="Monthly salary">
+      </div>
+
+      <div class="fg full">
+        <label>Address</label>
+        <textarea ng-model="employee.address" placeholder="Full address..."></textarea>
+      </div>
+
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:20px;">
+      <button type="submit" class="btn btn-primary" ng-disabled="saving">
+        {{ saving ? 'Saving...' : (isEdit ? 'Update Employee' : 'Save Employee') }}
+      </button>
+      <button type="button" class="btn btn-secondary" ng-click="reset()" ng-if="!isEdit">
+        Clear
+      </button>
+      <a href="#!/list" class="btn btn-secondary" style="text-decoration:none;" ng-if="isEdit">
+        Cancel
+      </a>
+    </div>
+
+  </form>
+</div>
